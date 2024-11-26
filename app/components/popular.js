@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useToken } from "../../_utils/token-context";
+import Image from "next/image";
 
 const PopularTracks = () => {
     const { token } = useToken();  // Using the token from context
@@ -49,7 +50,7 @@ const PopularTracks = () => {
                 <div className="flex flex-wrap gap-8">
                     {popTracks.map((track) => (
                         <div key={track.track.id} className="flex flex-col items-center max-w-xs">
-                            <img
+                            <Image width={96} height={96}
                                 className="max-h-48 object-cover rounded-lg"
                                 src={track.track.album.images[0]?.url}
                                 alt={track.track.name}

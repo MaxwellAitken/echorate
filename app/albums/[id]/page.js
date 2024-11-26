@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { AlbumProvider, useAlbum } from '../../../_utils/album-context';
 import { fetchAlbumDetails } from '../../../_utils/spotifyApi';
 import { useToken } from '../../../_utils/token-context';
+import Image from 'next/image';
 
 const AlbumPage = () => {
     const { id: albumId } = useParams();
@@ -21,7 +22,7 @@ const AlbumPage = () => {
             }
         };
         fetchData();
-    }, [albumId, getAlbum]);
+    }, [albumId, getAlbum, token, refreshToken]);
     
     return (
         <AlbumProvider>
@@ -30,7 +31,7 @@ const AlbumPage = () => {
             <>
                 <h1>{albumDetails.name}</h1>
                 <p>Artists: {albumDetails.artists.map((artist) => artist.name).join(", ")}</p>
-                <img className='max-h-96' src={albumDetails.images[0].url} alt={albumDetails.name} />
+                <Image width={196} height={196} className='max-h-96' src={albumDetails.images[0].url} alt={albumDetails.name} />
             </>
             ) : (
             <p>Loading...</p>

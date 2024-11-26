@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useToken } from "../../_utils/token-context";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 const SearchResultsPage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -10,7 +11,7 @@ const SearchResultsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const searchQuery = searchParams.get("query");
+  const searchQuery = searchParams.get("query") || "";
 
   useEffect(() => {
     if (!searchQuery) return;
@@ -40,18 +41,19 @@ const SearchResultsPage = () => {
 
   return (
     <div>
-      <h1>Search Results for "{searchQuery}"</h1>
+      <h1>Search Results for &quot;{searchQuery}&quot;</h1>
+
 
       {searchResults.length > 0 ? (
         <div className="flex flex-wrap gap-8">
           {searchResults.map((result) => (
             <button key={result.id} onClick={() => router.push(`/albums/${result.id}`)}>
                 <div className="result-item text-center">
-                <img className="max-h-48" src={result.images[0].url} alt={result.name} />
-                <div>
-                    <h2>{result.name}</h2>
-                    <p>{result.artists[0].name}</p>
-                </div>
+                    <Image width={96} height={96} className="max-h-48" src={result.images[0].url} alt={result.name} />
+                    <div>
+                        <h2>{result.name}</h2>
+                        <p>{result.artists[0].name}</p>
+                    </div>
                 </div>
             </button>
           ))}

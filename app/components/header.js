@@ -4,6 +4,7 @@ import { useUserAuth } from "../../_utils/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SearchBar } from "./search-bar";
+import Image from "next/image";
 
 let headerStyle = "sticky z-50 top-0 flex justify-between items-center py-4 px-6 bg-gray-900 bg-opacity-95";
 let buttonStyle = "rounded-lg bg-gray-800 drop-shadow-2xl hover:cursor-pointer hover:bg-gray-500 px-2.5 py-2 text-sm";
@@ -55,7 +56,7 @@ export default function Header(){
                     <SearchBar  />
                     <div className="flex gap-4 items-center">
                         <Link href="/" className="flex gap-2 items-center">
-                            <img className="max-h-8" src={user.photoURL} alt={user.displayName} />
+                            <Image width={36} height={36} className="max-h-8" src={user.photoURL} alt={user.displayName} />
                             <div className="flex flex-col justify-between py-2">
                                 <p>{user.displayName}</p>
                             </div>

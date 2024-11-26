@@ -10,7 +10,7 @@ const SearchResultsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const searchQuery = searchParams.get("query") || "";
+  const searchQuery = searchParams.get("query");
 
   useEffect(() => {
     if (!searchQuery) return;

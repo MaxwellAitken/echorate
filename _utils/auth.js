@@ -9,10 +9,15 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
  
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+  const googleSignIn = async () => {
+    const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
+    return userCred;
   };
+ 
+//   const googleSignIn = () => {
+//     const provider = new GoogleAuthProvider();
+//     return signInWithPopup(auth, provider);
+//   };
  
   const firebaseSignOut = () => {
     return signOut(auth);

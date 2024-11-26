@@ -2,13 +2,26 @@
 
 import AlbumInfo from "./components/album-info";
 import { useUserAuth } from "../_utils/auth";
+import { useToken } from "../_utils/token-context";
+import { useAlbum } from "../_utils/album-context";
+import { useEffect } from "react";
+import PopularTracks from "./components/popular";
 
-export default function HomePage(){
+const HomePage = () => {
     const {user, googleSignIn, firebaseSignOut} = useUserAuth();
     
+    useEffect(() => {
+        if (user) {
+            console.log(user);
+        } else {
+            console.log("No user signed in");
+        }
+    }, [user]);
+
     async function handleSignIn() {
         try {
             await googleSignIn();
+            
         } catch (error) {
             console.error(error);
         }
@@ -23,16 +36,22 @@ export default function HomePage(){
     }
     
     return (
-        <div>
-            {user ? (
-                <div>
-                    <h1>Album Information</h1>
-                    <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
-                    <button className="mt-5" onClick={handleSignOut}>Sign Out</button>
-                </div>
-            ) : (
-                <button onClick={handleSignIn}>Sign In</button>
-            )}
-        </div>
+        <main>
+
+            <div>
+                {user ? (
+                    <div>
+                        <h1>Album Information</h1>
+                        <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
+                        <PopularTracks />
+                        <button className="mt-24" onClick={handleSignOut}>Sign Out</button>
+                    </div>
+                ) : (
+                    <button onClick={handleSignIn}>Sign In</button>
+                )}
+            </div>
+        </main>
     );
 };
+
+export default HomePage;

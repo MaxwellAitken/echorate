@@ -1,15 +1,18 @@
 import { AuthContextProvider } from "../_utils/auth";
+import { TokenProvider } from "@/_utils/token-context";
+import { AlbumProvider } from "../_utils/album-context";
 import Header from "./components/header";
 import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
+    src: "/fonts/GeistVF.woff",  // Adjust the font path as necessary
     variable: "--font-geist-sans",
     weight: "100 900",
 });
+
 const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
+    src: "/fonts/GeistMonoVF.woff",  // Adjust the font path as necessary
     variable: "--font-geist-mono",
     weight: "100 900",
 });
@@ -22,10 +25,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <body>
                 <AuthContextProvider>
-                    <Header />
-                    {children}
+                    <TokenProvider>
+                        <AlbumProvider>
+                            <Header />
+                            {children}
+                        </AlbumProvider>
+                    </TokenProvider>
                 </AuthContextProvider>
             </body>
         </html>

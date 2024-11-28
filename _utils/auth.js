@@ -14,11 +14,6 @@ export const AuthContextProvider = ({ children }) => {
     return userCred;
   };
  
-//   const googleSignIn = () => {
-//     const provider = new GoogleAuthProvider();
-//     return signInWithPopup(auth, provider);
-//   };
- 
   const firebaseSignOut = () => {
     return signOut(auth);
   };

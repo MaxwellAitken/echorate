@@ -8,11 +8,13 @@ import { useToken } from '../../../_utils/token-context';
 import Image from 'next/image';
 
 const AlbumPage = () => {
-    const { id: albumId } = useParams();
+    const params = useParams();
+    const albumId = params?.id;
     const { getAlbum } = useAlbum();
     const [albumDetails, setAlbumDetails] = useState(null);
     const { token, refreshToken } = useToken();
     useEffect(() => {
+        if (!albumId) return;
         const fetchData = async () => {
             try {
                 const album = await fetchAlbumDetails(albumId, token, refreshToken);

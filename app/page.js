@@ -9,14 +9,7 @@ import PopularTracks from "./components/popular";
 
 const HomePage = () => {
     const {user, googleSignIn, firebaseSignOut} = useUserAuth();
-    
-    useEffect(() => {
-        if (user) {
-            console.log(user);
-        } else {
-            console.log("No user signed in");
-        }
-    }, [user]);
+    const {token, refreshToken} = useToken();
 
     async function handleSignIn() {
         try {
@@ -41,7 +34,7 @@ const HomePage = () => {
             <div>
                 {user ? (
                     <div>
-                        <h1>Album Information</h1>
+                        {/* <h1>Album Information</h1> */}
                         <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
                         <PopularTracks />
                         <button className="mt-24" onClick={handleSignOut}>Sign Out</button>

@@ -49,7 +49,7 @@ const DropdownMenu = () => {
                     </Link>
                     {isOpen && (
                         <ul className="w-full absolute bg-gray-500 p-4 flex flex-col gap-4 text-gray-950 font-bold text-sm">
-                            <li className=""><a href="/">My Reviews</a></li>
+                            <li className=""><Link href="/">My Reviews</Link></li>
 
                             <li>
                                 <button onClick={handleSignOut}>Sign Out</button>

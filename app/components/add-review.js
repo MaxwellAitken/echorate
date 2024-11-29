@@ -7,7 +7,8 @@ import { useToken } from '../../_utils/token-context';
 import { fetchAlbumSearchResults } from "@/_utils/spotifyApi";
 import Image from "next/image";
 import { StarRating } from "./star-rating";
-// import DatePicker from "react-datepicker";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 
 export const AddReview = ({ }) => {
     
@@ -108,7 +109,7 @@ export const AddReview = ({ }) => {
         (
             !selectedAlbum ? 
             (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                     <div className="bg-gray-500 p-6 rounded-lg shadow-lg w-5/12 flex justify-between relative">
                     
                         <div className="w-full">
@@ -147,7 +148,7 @@ export const AddReview = ({ }) => {
             ): 
             (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-gray-500 p-6 rounded-lg shadow-lg  flex gap-8 items-start">
+                    <div className="bg-gray-500 p-6 rounded-lg shadow-lg  flex gap-8 items-start w-7/12">
                         {/* Modal Header */}
                         <div className="flex  flex-col gap-8 items-start">
                             <button className="text-gray-800 bg-gray-200 p-2" onClick={() => handleAlbumSelect(null)}>back</button>
@@ -177,19 +178,20 @@ export const AddReview = ({ }) => {
                             <form onSubmit={handleSubmit} className="space-y-4">
 
                                 <div className="flex gap-12">
-                                    {/* <div className="flex gap-2 items-center justify-start">
+                                    <div className="flex gap-2 items-center justify-start">
                                         <label className="block text-sm font-medium text-gray-700">
                                             Listened on
                                         </label>
-                                        <input
+                                        {/* <input
                                             type="date"
                                             className="text-gray-950 bg-gray-600 w-full text-sm text-center hover:cursor-pointer cursor-not-allowed focus:outline-none"
                                             selected={review.date}
+                                            value={review.date.toISOString().split("T")[0] || ""}
                                             onChange={handleDateChange}
-                                            dateFormat="yyyy-MM-dd"
-                                            maxDate={new Date()}
-                                        />
-                                         <DatePicker
+                                            // dateFormat="yyyy-MM-dd"
+                                            // maxDate={new Date()}
+                                        /> */}
+                                         {/* <DatePicker
                                             wrapperClassName="w-1/3"
                                             className="text-gray-950 bg-gray-600 w-full text-sm text-center hover:cursor-pointer cursor-not-allowed focus:outline-none"
                                             selected={review.date}
@@ -197,8 +199,8 @@ export const AddReview = ({ }) => {
                                             dateFormat="yyyy-MM-dd"
                                             showPopperArrow={false}
                                             maxDate={new Date()}
-                                        /> 
-                                    </div> */}
+                                        />  */}
+                                    </div>
 
                                     <div className="flex gap-2 items-center">
                                         <input
@@ -276,6 +278,7 @@ export const AddReview = ({ }) => {
         (
             <div></div>
         )}
+
         </div>
     );
 };

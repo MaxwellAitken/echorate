@@ -61,7 +61,6 @@ export const StarRating = ({ onRatingChange }) => {
                         transform={`   translate(${translate}, 0)     `}
                         // transform={`   translate(${star * 20}, 0)     ${isHalf ? "scale(-1, 1)" : "scale(1, 1)"}   `}
                         transformOrigin="center"
-                        fill={isFilled ? 'fill-yellow-400' : 'fill-gray-800'}
                         key={star}
                         className={`cursor-pointer  ${isFilled ? 'fill-green-500' : 'fill-gray-800'}`}
                         strokeWidth="2"

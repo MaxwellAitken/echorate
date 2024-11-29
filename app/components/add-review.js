@@ -6,10 +6,6 @@ import { useUserAuth } from "@/_utils/auth";
 import { useToken } from '../../_utils/token-context';
 import { fetchAlbumSearchResults } from "@/_utils/spotifyApi";
 import Image from "next/image";
-import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
-import StarRatings from 'react-star-ratings';
-import Ratings from "react-ratings-declarative";
 import { StarRating } from "./star-rating";
 
 export const AddReview = ({ }) => {

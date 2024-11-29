@@ -18,12 +18,13 @@ export const SearchBar = ({ }) => {
         router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
         if (inputRef.current) {
             inputRef.current.blur();
-          }
+        }
     };
     
     const [isOpen, setIsOpen] = useState(false);
     
     const handleClick = () => setIsOpen(true);
+    
     useEffect(() => {
         if (isOpen && inputRef.current) {
             inputRef.current.focus();

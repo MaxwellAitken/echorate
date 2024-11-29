@@ -213,7 +213,7 @@ export const AddReview = ({ }) => {
                                             required
                                         />
                                         <label className="block text-sm font-medium text-gray-700">
-                                            I've heard this album before
+                                            I&aposve heard this album before
                                         </label>
                                     </div>
                                 </div>

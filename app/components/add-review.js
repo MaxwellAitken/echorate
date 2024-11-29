@@ -7,6 +7,7 @@ import { useToken } from '../../_utils/token-context';
 import { fetchAlbumSearchResults } from "@/_utils/spotifyApi";
 import Image from "next/image";
 import { StarRating } from "./star-rating";
+// import DatePicker from "react-datepicker";
 
 export const AddReview = ({ }) => {
     
@@ -176,11 +177,19 @@ export const AddReview = ({ }) => {
                             <form onSubmit={handleSubmit} className="space-y-4">
 
                                 <div className="flex gap-12">
-                                    <div className="flex gap-2 items-center justify-start">
+                                    {/* <div className="flex gap-2 items-center justify-start">
                                         <label className="block text-sm font-medium text-gray-700">
                                             Listened on
                                         </label>
-                                        <DatePicker
+                                        <input
+                                            type="date"
+                                            className="text-gray-950 bg-gray-600 w-full text-sm text-center hover:cursor-pointer cursor-not-allowed focus:outline-none"
+                                            selected={review.date}
+                                            onChange={handleDateChange}
+                                            dateFormat="yyyy-MM-dd"
+                                            maxDate={new Date()}
+                                        />
+                                         <DatePicker
                                             wrapperClassName="w-1/3"
                                             className="text-gray-950 bg-gray-600 w-full text-sm text-center hover:cursor-pointer cursor-not-allowed focus:outline-none"
                                             selected={review.date}
@@ -188,8 +197,8 @@ export const AddReview = ({ }) => {
                                             dateFormat="yyyy-MM-dd"
                                             showPopperArrow={false}
                                             maxDate={new Date()}
-                                        />
-                                    </div>
+                                        /> 
+                                    </div> */}
 
                                     <div className="flex gap-2 items-center">
                                         <input

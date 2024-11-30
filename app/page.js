@@ -3,13 +3,10 @@
 import AlbumInfo from "./components/album-info";
 import { useUserAuth } from "../_utils/auth";
 import { useToken } from "../_utils/token-context";
-import { useAlbum } from "../_utils/album-context";
-import { useEffect } from "react";
 import PopularTracks from "./components/popular";
 
 const HomePage = () => {
     const {user, googleSignIn, firebaseSignOut} = useUserAuth();
-    const {token, refreshToken} = useToken();
 
     async function handleSignIn() {
         try {

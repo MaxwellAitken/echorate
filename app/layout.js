@@ -25,7 +25,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body>
+            <body className="bg-scroll bg-gradient-to-t from-zinc-950 to-zinc-700  h-full min-h-screen">
                 <AuthContextProvider>
                     <TokenProvider>
                         <AlbumProvider>

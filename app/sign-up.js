@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useUserAuth } from "../_utils/auth";
 
 export const SignUpModal = ({ isOpen, onClose }) => {
-	if (!isOpen) return null;
 	
     const {user, emailSignIn, emailSignUp} = useUserAuth();
     const [email, setEmail] = useState("");
@@ -10,6 +9,7 @@ export const SignUpModal = ({ isOpen, onClose }) => {
     const [username, setUsername] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
         
+	if (!isOpen) return null;
 	
 	const handleSignup = async (e) => {
 		e.preventDefault();

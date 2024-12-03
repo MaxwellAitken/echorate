@@ -5,7 +5,9 @@ import { useParams } from 'next/navigation';
 import { AlbumProvider, useAlbum } from '../../../_utils/album-context';
 import { fetchAlbumDetails } from '../../../_utils/spotifyApi';
 import { useToken } from '../../../_utils/token-context';
+import { getReviewsByAlbum } from "../../../_services/review-service";
 import Image from 'next/image';
+import { StaticRating } from '@/app/components/static-rating';
 
 const AlbumPage = () => {
     const params = useParams();
@@ -13,6 +15,8 @@ const AlbumPage = () => {
     const { getAlbum } = useAlbum();
     const [albumDetails, setAlbumDetails] = useState(null);
     const { token, refreshToken } = useToken();
+    const [reviews, setReviews] = useState([]);
+        
     useEffect(() => {
         if (!albumId) return;
         const fetchData = async () => {
@@ -25,16 +29,56 @@ const AlbumPage = () => {
         };
         fetchData();
     }, [albumId, getAlbum, token, refreshToken]);
+
+
+    
+    async function loadReviews(){
+        try {
+            const reviews = await getReviewsByAlbum(albumDetails.id);
+            setReviews(reviews);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        if (albumDetails) {
+            loadReviews();
+        }
+    }, [albumDetails]);
+
+
     
     return (
         <AlbumProvider>
         <div className='mt-12 ml-16 text-2xl'>
             {albumDetails ? (
-            <>
+            <div>
                 <h1>{albumDetails.name}</h1>
-                <p>Artists: {albumDetails.artists.map((artist) => artist.name).join(", ")}</p>
+                <p className='italic text-xl'>{albumDetails.artists.map((artist) => artist.name).join(", ")}</p>
                 <Image width={196} height={196} className='max-h-96' src={albumDetails.images[0].url} alt={albumDetails.name} />
-            </>
+
+                {reviews.length > 0 ? 
+                (
+                    <div>
+
+                        hi
+                        {reviews.map((review) => (
+                            <div className="bg-gray-700 p-8" key={review.id}>
+                                <div className="result-item text-center">
+                                </div>
+                                
+                                <div>
+                                    <StaticRating rating={review.rating} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : 
+                (
+                    <p>No reviews found.. Be the first</p>
+                )}
+            </div>
             ) : (
             <p>Loading...</p>
             )}

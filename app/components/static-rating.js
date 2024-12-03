@@ -1,37 +1,9 @@
-import React, { useState } from 'react';
-
-export const StarRating = ({ onRatingChange }) => {
-    const [rating, setRating] = useState(0);
-    const [hoverRating, setHoverRating] = useState(0);
-
-    const handleMouseEnter = (index) => {
-        setHoverRating(index);
-    };
-
-    const handleMouseLeave = () => {
-        setHoverRating(rating);
-    };
-
-    const handleClick = (index) => {
-        setRating(index);
-        onRatingChange(index);
-    };
-
-    const handleClear = () => {
-        setHoverRating(0);
-        setRating(0);
-        onRatingChange(0);
-    }
+export const StaticRating = ({ rating }) => {
 
   const stars = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
     return (
-        <div className="flex items-center gap-2 relative" onMouseLeave={handleMouseLeave}>
-
-            {rating > 0 &&
-                <button type='button' onClick={handleClear} className='mt-2 right-full p-1 absolute'>✖</button>
-             }
-
+        <div className="flex items-center gap-2 w-48">
             <svg
                 className='h-21'
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +11,7 @@ export const StarRating = ({ onRatingChange }) => {
             >
 
                 {stars.map((star) => {
-                    const isFilled = hoverRating >= star;
+                    const isFilled = rating >= star;
                     const isHalf = !Number.isInteger(star);
 
                     const translate = star * 24 + (!isHalf ? 0 : 12.1);
@@ -55,8 +27,6 @@ export const StarRating = ({ onRatingChange }) => {
                             key={star}
                             className={`cursor-pointer  ${isFilled ? 'fill-green-500' : 'fill-gray-800'}`}
                             strokeWidth="2"
-                            onClick={() => handleClick(star)}
-                            onMouseEnter={() => handleMouseEnter(star)}
                         ></path>
                     );
                 })}

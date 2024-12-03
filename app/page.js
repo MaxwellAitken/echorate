@@ -1,44 +1,61 @@
 "use client"
 
-import AlbumInfo from "./components/album-info";
+import { useState } from "react";
 import { useUserAuth } from "../_utils/auth";
-import { useToken } from "../_utils/token-context";
+import { SignUpModal } from "./sign-up";
+import AlbumInfo from "./components/album-preview";
 import PopularTracks from "./components/popular";
 
 const HomePage = () => {
-    const {user, googleSignIn, firebaseSignOut} = useUserAuth();
 
-    async function handleSignIn() {
+    const {user, emailSignIn, emailSignUp, firebaseSignOut} = useUserAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleSignIn = async () => {
         try {
-            await googleSignIn();
-            
+            await emailSignIn(email, password);
         } catch (error) {
             console.error(error);
         }
     }
-    
-    async function handleSignOut() {
+
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
+
+
+    const handleSignOut = async () => {
         try {
             await firebaseSignOut();
+            setIsModalOpen(false);
         } catch (error) {
             console.error(error);
         }
     }
+
     
     return (
         <main>
-
             <div>
-                {user ? (
+                {user ? 
+                (
                     <div>
                         {/* <h1>Album Information</h1> */}
-                        <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
-                        <PopularTracks />
+                        {/* <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
+                        <PopularTracks /> */}
                         <button className="mt-24" onClick={handleSignOut}>Sign Out</button>
                     </div>
-                ) : (
-                    <button onClick={handleSignIn}>Sign In</button>
-                )}
+                ) : 
+                (
+                    <div>
+                        <p>Don't have an account?</p>
+                        <button onClick={handleOpenModal}>Sign up</button>
+                        <SignUpModal isOpen={isModalOpen} onClose={handleCloseModal} />
+                    </div>
+                )
+                }
             </div>
         </main>
     );

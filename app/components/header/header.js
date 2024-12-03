@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useUserAuth } from "../../_utils/auth";
+import { useUserAuth } from "../../../_utils/auth";
 import { DropdownMenu } from "./user-drop-down";
 import { SearchBar } from "./search-bar";
-import { AddReview } from "./add-review";
+import { AddReview } from "../add-review";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,7 +17,7 @@ export default function Header(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchBarOpen, setSearchBarOpen] = useState(false);
 
-    useEffect(() => {}, [user]);
+    // useEffect(() => {}, [user]);
 
     async function handleSignIn() {
         try {

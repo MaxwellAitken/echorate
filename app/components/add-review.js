@@ -1,6 +1,6 @@
 "use client"
 
-import { addReview } from "@/_services/review-service";
+import { addReviewToUser, addReviewToAlbum } from "@/_services/review-service";
 import { useState, useEffect, useRef } from "react";
 import { useUserAuth } from "@/_utils/auth";
 import { useToken } from '../../_utils/token-context';
@@ -55,7 +55,7 @@ export const AddReview = ({ onClose }) => {
         setReview({
             album: null,
             date: new Date(),
-            relisten: "",
+            relisten: false,
             text: "",
             rating: 0,
         });
@@ -76,7 +76,7 @@ export const AddReview = ({ onClose }) => {
         setReview({
             album: null,
             date: new Date(),
-            relisten: "",
+            relisten: false,
             text: "",
             rating: 0,
         });
@@ -117,14 +117,20 @@ export const AddReview = ({ onClose }) => {
         const { name, value } = e.target;
         setReview((prev) => ({ ...prev, [name]: value }));
     };
-    const handleDateChange = (date) => {
+    const handleDateChange = (newDate) => {
         setHasChanges(true);
-        setReview((prev) => ({ ...prev, date }));
+        setReview((prev) => ({ ...prev, date: newDate }));
     };
-    const handleRatingChange = (rating) => {
-        setHasChanges(true);
-        setReview((prev) => ({ ...prev, rating }));
+    const handleRatingChange = (newRating) => {
+        if (newRating == 0) {
+            setHasChanges(false);
+            setReview((prev) => ({ ...prev, rating: 0 }));
+        } else {
+            setHasChanges(true);
+            setReview((prev) => ({ ...prev, rating: newRating }));
+        }
     };
+
     
 
     // Review Submission
@@ -139,7 +145,8 @@ export const AddReview = ({ onClose }) => {
             text: review.text,
             rating: review.rating,
         };
-        addReview(user.uid, newReview); // Add review to database
+        addReviewToUser(user.uid, newReview);
+        addReviewToAlbum(selectedAlbum.id, newReview);
         onClose();
     };
 
@@ -277,9 +284,13 @@ export const AddReview = ({ onClose }) => {
 
 
                                     {/* Rating */}
-                                    <StarRating rating={review.rating} onRatingChange={handleRatingChange} />
-
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Rating
+                                    </label>
+                                    <StarRating onRatingChange={handleRatingChange} />
                                     
+
+                                    {/* Submit */}
                                     <div className="flex justify-end space-x-2">
                                         <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                                             Save
@@ -289,6 +300,7 @@ export const AddReview = ({ onClose }) => {
                                 </form>
                             </div>
                             
+                            {/* Close */}
                             <button className="text-gray-800 hover:text-gray-800" onClick={closeModal}>
                                 ✖
                             </button>

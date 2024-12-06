@@ -25,7 +25,7 @@ export const StaticRating = ({ rating }) => {
                             transform={`translate(${translate}, 0)`}
                             transformOrigin="center"
                             key={star}
-                            className={`cursor-pointer  ${isFilled ? 'fill-green-500' : 'fill-gray-800'}`}
+                            className={`${isFilled ? 'fill-green-500' : 'fill-gray-800'}`}
                             strokeWidth="2"
                         ></path>
                     );

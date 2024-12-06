@@ -9,26 +9,43 @@ import Image from "next/image";
 import { StarRating } from "./star-rating";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useUser } from "@/_utils/user-context";
 
 
-export const AddReview = ({ onClose }) => {
+export const AddReview = ({ album, onClose }) => {
     
     const { user } = useUserAuth();
+    const { userData, loading } = useUser();
     const { token } = useToken();
     const inputRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [selectedAlbum, setSelectedAlbum] = useState(null);
+    const [selectedAlbum, setSelectedAlbum] = useState(album || null);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showBackConfirmation, setShowBackConfirmation] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
     const [review, setReview] = useState({
         album: null,
         date: new Date(),
-        relisten: false,
+        relisten: userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id) ? true : false,
         text: "",
-        rating: 0,
+        rating: userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id) ? userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id).rating : 0,
     });
+
+    useEffect(() => {
+        if (userData && selectedAlbum) {
+            const checkIfUserReviewedAlbum = () => {
+                if (!userData.ratings) return;
+                const userRating = userData.ratings.find(rating => rating.album.id === selectedAlbum.id);
+                if (userRating) {
+                    setReview((prev) => ({ ...prev, rating: userRating.rating }));
+                    setReview((prev) => ({ ...prev, relisten: true }));
+                }
+                setSelectedAlbum(selectedAlbum);
+            }
+            checkIfUserReviewedAlbum();
+        }
+    }, [user, selectedAlbum, userData, loading]);
 
 
     // Close Modal - Show Confirmation
@@ -139,6 +156,7 @@ export const AddReview = ({ onClose }) => {
         e.preventDefault();
 
         let newReview = {
+            username: user.displayName,
             album: selectedAlbum,
             date: review.date.toISOString(),
             relisten: review.relisten,
@@ -146,20 +164,20 @@ export const AddReview = ({ onClose }) => {
             rating: review.rating,
         };
         addReviewToUser(user.uid, newReview);
-        addReviewToAlbum(selectedAlbum.id, newReview);
+        addReviewToAlbum(user.uid, selectedAlbum.id, newReview);
         onClose();
     };
 
     // Focus on album search input
     useEffect(() => {
-        inputRef.current.focus();
+        if (selectedAlbum === null) inputRef.current.focus();
     }, []);
     
     return (
         <div className="relative ml-36">
         
             {/* Album Select Modal */}
-            {!selectedAlbum ? 
+            {!selectedAlbum ?
                 (
                     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                         <div className="bg-gray-500 p-6 rounded-lg shadow-lg w-5/12 flex justify-between relative">
@@ -248,7 +266,6 @@ export const AddReview = ({ onClose }) => {
                                                 maxDate={new Date()}
                                                 required
                                             />
-
                                         </div>
 
                                         {/* Re-listen */}
@@ -258,6 +275,7 @@ export const AddReview = ({ onClose }) => {
                                                 name="title"
                                                 value={review.relisten}
                                                 onChange={handleInputChange}
+                                                defaultChecked={review.relisten}
                                                 className="text-gray-800 min-w-3 mt-1  border rounded-lg focus:outline-none"
                                             />
                                             <label className="block text-sm font-medium text-gray-700">
@@ -287,7 +305,9 @@ export const AddReview = ({ onClose }) => {
                                     <label className="block text-sm font-medium text-gray-700">
                                         Rating
                                     </label>
-                                    <StarRating onRatingChange={handleRatingChange} />
+                                    <div className="w-1/2">
+                                        <StarRating currentRating={review.rating} onRatingChange={handleRatingChange} />
+                                    </div>
                                     
 
                                     {/* Submit */}

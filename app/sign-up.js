@@ -1,25 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUserAuth } from "../_utils/auth";
+import { useRouter } from "next/navigation";
 
 export const SignUpModal = ({ isOpen, onClose }) => {
 	
-    const {user, emailSignIn, emailSignUp} = useUserAuth();
+    const {emailSignUp} = useUserAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-        
+    const router = useRouter();
 	if (!isOpen) return null;
 	
 	const handleSignup = async (e) => {
 		e.preventDefault();
 		try {
 			await emailSignUp(email, password, username);
-			alert("Signup successful");
+            router.refresh();
+            handleClose();
+			// alert("Signup successful");
 		} catch (error) {
 			setErrorMessage(error.message);
 		}
 	}
+
+    const handleClose = () => {
+        onClose();
+        setErrorMessage("");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+    }
 	
 	return (
 		<div className="fixed top-0 left-0 bottom-0 right-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -27,7 +38,7 @@ export const SignUpModal = ({ isOpen, onClose }) => {
 
 				<div className="flex justify-between items-center">
 					<h2>Join Echorate</h2>
-					<button className=" p-2 rounded-md" onClick={onClose}>✖</button>
+					<button className=" p-2 rounded-md" onClick={handleClose}>✖</button>
 				</div>
 
 				<form className="flex flex-col gap-8" onSubmit={handleSignup}>
@@ -45,11 +56,11 @@ export const SignUpModal = ({ isOpen, onClose }) => {
 							onChange={(e) => setEmail(e.target.value)}
 							required
 						/>
-						{errorMessage && <p className="text-red-500 absolute top-full">{errorMessage}</p>}
+						{errorMessage === "Email address is already in use." && <p className="text-red-500 font-semibold absolute top-full">{errorMessage}</p>}
 					</div>
 
 					
-					<div className="flex flex-col">
+					<div className="flex flex-col relative">
 						<label className="block text-sm font-medium text-gray-700">
 							Username
 						</label>
@@ -58,9 +69,10 @@ export const SignUpModal = ({ isOpen, onClose }) => {
 							type="text"
 							placeholder="Username"
 							value={username}
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={(e) => setUsername(e.target.value.toLowerCase())}
 							required
 						/>
+						{errorMessage === "Username is already taken." && <p className="text-red-500 font-semibold absolute top-full">{errorMessage}</p>}
 					</div>
 
 					

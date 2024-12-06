@@ -26,3 +26,10 @@ body {
   transition-duration: 500ms;
   width: 100px;
 }
+
+.bg-vinyl {
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 1%, transparent 1%),
+    radial-gradient(circle, rgba(0, 0, 0, 0.4) 2%, transparent 2%);
+  background-size: 10% 10%;
+  background-color: #111;
+}

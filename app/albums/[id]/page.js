@@ -16,7 +16,9 @@ const AlbumPage = () => {
     const [albumDetails, setAlbumDetails] = useState(null);
     const { token, refreshToken } = useToken();
     const [reviews, setReviews] = useState([]);
+    const [avgRating, setAvgRating] = useState(null);
         
+
     useEffect(() => {
         if (!albumId) return;
         const fetchData = async () => {
@@ -36,6 +38,7 @@ const AlbumPage = () => {
         try {
             const reviews = await getReviewsByAlbum(albumDetails.id);
             setReviews(reviews);
+            setAvgRating(reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length);
         } catch (error) {
             console.error(error);
         }
@@ -48,6 +51,7 @@ const AlbumPage = () => {
     }, [albumDetails]);
 
 
+
     
     return (
         <AlbumProvider>
@@ -58,11 +62,14 @@ const AlbumPage = () => {
                 <p className='italic text-xl'>{albumDetails.artists.map((artist) => artist.name).join(", ")}</p>
                 <Image width={196} height={196} className='max-h-96' src={albumDetails.images[0].url} alt={albumDetails.name} />
 
+                <div>
+                    <p>Release date: {albumDetails.release_date}</p>
+                    <p>Popularity: {albumDetails.popularity}</p>
+                    <p>Average rating: {avgRating}</p>
+                </div>
                 {reviews.length > 0 ? 
                 (
                     <div>
-
-                        hi
                         {reviews.map((review) => (
                             <div className="bg-gray-700 p-8" key={review.id}>
                                 <div className="result-item text-center">

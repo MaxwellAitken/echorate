@@ -44,32 +44,27 @@ export const SearchBar = ({ onOpenSearch }) => {
     
     
     return (
-        <div className="flex items-center ">
-            
-            <div className="relative flex items-center">
+        <div className="relative flex items-center">
+            {isOpen ? 
+                (
+                    <button className="w-8" onClick={handleCloseSearch}>✖</button>
+                ) : 
+                (
+                    <FaSearch className="hover:cursor-pointer w-5" onClick={handleOpenSearch} size={20} />
+                )
+            }
 
-                {isOpen ? 
-                    (
-                        <button className="w-8" onClick={handleCloseSearch}>✖</button>
-                    ) : 
-                    (
-                        <FaSearch className="hover:cursor-pointer w-8" onClick={handleOpenSearch} size={20} />
-                    )
-                }
-
-                {/* <div> */}
-                    <form className={`absolute ml-8 top-1/2 transform -translate-y-1/2 transition-all duration-300 ${isOpen ? 'w-36' : 'w-0'} overflow-hidden`} onSubmit={handleSearchSubmit}>
-                        <input
-                            ref={inputRef}
-                            className="p-1 w-full rounded-2xl text-gray-800 focus:outline-none"
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </form>
-                {/* </div> */}
-
-            </div>
+            {/* <div> */}
+                <form className={`absolute ml-8 top-1/2 transform -translate-y-1/2 transition-all duration-300 ${isOpen ? 'w-32' : 'w-0'} overflow-hidden`} onSubmit={handleSearchSubmit}>
+                    <input
+                        ref={inputRef}
+                        className="p-1 w-full rounded-2xl text-gray-800 focus:outline-none"
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </form>
+            {/* </div> */}
         </div>
     );
 };

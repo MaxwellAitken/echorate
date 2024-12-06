@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-export const StarRating = ({ onRatingChange }) => {
-    const [rating, setRating] = useState(0);
-    const [hoverRating, setHoverRating] = useState(0);
+export const StarRating = ({ onRatingChange, currentRating }) => {
+    const [rating, setRating] = useState(currentRating || 0);
+    const [hoverRating, setHoverRating] = useState(currentRating || 0);
 
     const handleMouseEnter = (index) => {
         setHoverRating(index);
@@ -26,16 +26,16 @@ export const StarRating = ({ onRatingChange }) => {
   const stars = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
     return (
-        <div className="flex items-center gap-2 relative" onMouseLeave={handleMouseLeave}>
+        <div className={"flex items-center h-full w-full gap-2 relative"} onMouseLeave={handleMouseLeave}>
 
             {rating > 0 &&
                 <button type='button' onClick={handleClear} className='mt-2 right-full p-1 absolute'>✖</button>
              }
 
             <svg
-                className='h-21'
+                className=""
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="24 0 240 22"
+                viewBox="24 0 120 22"
             >
 
                 {stars.map((star) => {

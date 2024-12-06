@@ -1,16 +1,18 @@
 "use client";
 
 import { useContext, createContext, useState, useEffect } from "react";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
-import { auth } from "./firebase";
-import { doc, setDoc, getFirestore, onSnapshot } from "firebase/firestore";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, getAuth, setLog } from "firebase/auth";
+import { auth, storage } from "./firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, setDoc, getFirestore, onSnapshot, getDoc, getDocs, collection, query, where } from "firebase/firestore";
+import { set } from "date-fns";
 
 const AuthContext = createContext();
 const db = getFirestore();
+const defaultProfilePicture = `${process.env.NEXT_PUBLIC_BASE_URL}/images/DefaultProfilePic.png`;
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [username, setUsername] = useState("");
     
     // Sign in
     const emailSignIn = async (email, password) => {
@@ -18,33 +20,63 @@ export const AuthContextProvider = ({ children }) => {
             const userCred = await signInWithEmailAndPassword(auth, email, password);
             return userCred;
         } catch (error) {
-            console.error("Error signing in:", error.message);
-            throw error;
+            if (error.code === 'auth/invalid-credential') {
+                throw new Error("Email or password is incorrect.");
+            } else{
+                console.error("Error signing in:", error.message);
+                throw error;
+            }
         }
     };
     
     // Sign up
     const emailSignUp = async (email, password, username) => {
         try {
-            const userCred = await createUserWithEmailAndPassword(auth, email, password);
-            
-            await updateProfile(userCred.user, { displayName: username });
 
+            // Check if username is already taken
+            const publicProfilesRef = collection(db, "publicProfiles");
+            const q = query(publicProfilesRef, where("username", "==", username.toLowerCase()));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                throw new Error("Username is already taken.");
+            }
+
+            // Create user
+            const userCred = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCred.user, { displayName: username.toLowerCase(), photoURL: defaultProfilePicture });
+            // Add user to database (private)
             const userDoc = doc(db, "users", userCred.user.uid);
             await setDoc(userDoc, {
-                username: username,
+                username: username.toLowerCase(),
                 email: userCred.user.email,
+                photoURL: defaultProfilePicture,
+                bio: "",
+                favoriteAlbums: [],
+                queue: [],
             });
+
+            // Add user to database (public)
+            const publicUserDoc = doc(db, "publicProfiles", userCred.user.uid);
+            await setDoc(publicUserDoc, {
+                username: username.toLowerCase(),
+                photoURL: defaultProfilePicture,
+                bio: "",
+                favoriteAlbums: [],
+                queue: [],
+            });
+
             return userCred;
         } catch (error) {
-
             if (error.code === 'auth/email-already-in-use') {
-                throw new Error("The email address is already in use.");
+                throw new Error("Email address is already in use.");
             } 
+            if (error.message === "Username is already taken.") {
+                throw new Error("Username is already taken.");
+            }
             else {
                 console.error("Error signing up:", error.message);
                 throw error;
-              }
+            }
         }
     };
     
@@ -52,37 +84,118 @@ export const AuthContextProvider = ({ children }) => {
     const firebaseSignOut = async () => {
         try {
             await signOut(auth);
+            setUser(null);
         } catch (error) {
             console.error("Error signing out:", error.message);
         }
     };
     
     // Listen for user state changes
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    //         setUser(currentUser);
+    //     });
+    //     return () => unsubscribe();
+    // }, []);
+
+    // Update Profile Picture
+    const uploadProfilePicture = async (file) => {
+        if (!auth.currentUser) {
+            throw new Error("User not logged in");
+        }
+
+        try {
+            const fileRef = ref(storage, `profilePictures/${auth.currentUser.uid}`);
+            await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(fileRef);
+
+            await updateProfile(auth.currentUser, { photoURL: url });
+            
+
+            const userDoc = doc(db, "users", auth.currentUser.uid);
+            await setDoc(userDoc, {
+                photoURL: defaultProfilePicture,
+            }, { merge: true });
+
+            
+            const publicUserDoc = doc(db, "publicProfiles", auth.currentUser.uid);
+            await setDoc(publicUserDoc, {
+                photoURL: defaultProfilePicture,
+            }, { merge: true });
+            return url;
+        } catch (error) {
+            console.error("Error uploading profile picture:", error.message);
+            throw error;
+        }
+    };
+
+
+    // // Fetch user reviews from Firestore
+    // const fetchUserReviews = async (uid) => {
+    //     try {
+    //         const allReviews = collection(db, "users", uid, "reviews");
+    //         const allReviewsQuery = query(allReviews);
+    //         const allReviewsSnapshot = await getDocs(allReviewsQuery);
+    //         let reviewList = [];
+    //         allReviewsSnapshot.forEach((doc) => {
+    //             let thisReview = {
+    //                 id: doc.id,
+    //                 ...doc.data()
+    //             };
+    //             reviewList.push(thisReview);
+    //         });
+    //         setUserData(prevUserData => ({ 
+    //             ...prevUserData,
+    //              reviews: reviewList 
+    //         }));
+    //     } catch (error) {
+    //         console.error("Error fetching user data:", error.message);
+    //     }
+    // };
+
+
+    // // Fetch user ratings from Firestore
+    // const fetchUserRatings = async (uid) => {
+    //     try {
+    //         const allRatings = collection(db, "users", uid, "ratings");
+    //         const allRatingsQuery = query(allRatings);
+    //         const allRatingsSnapshot = await getDocs(allRatingsQuery);
+    //         let ratingList = [];
+    //         allRatingsSnapshot.forEach((doc) => {
+    //             let thisRating = {
+    //                 id: doc.id,
+    //                 ...doc.data()
+    //             };
+    //             ratingList.push(thisRating);
+    //         });
+    //         setUserData(prevUserData => ({ 
+    //             ...prevUserData,
+    //             ratings: ratingList 
+    //         }));
+    //     } catch (error) {
+    //         console.error("Error fetching user data:", error.message);
+    //     }
+    // };
+
+
+
+    // Listen for user state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+                // await fetchUserData(currentUser.uid);
+                // await fetchUserReviews(currentUser.uid);
+                // await fetchUserRatings(currentUser.uid);
+            } else {
+                setUser(null);
+            }
         });
         return () => unsubscribe();
     }, []);
     
-    // Get username
-    useEffect(() => {
-        if (user) {
-            const userDoc = doc(db, "users", user.uid);
-            const unsubscribe = onSnapshot(userDoc, (docSnap) => {
-                if (docSnap.exists()) {
-                    setUsername(docSnap.data().username);
-                } else {
-                    console.error("No such document!");
-                }
-            });
-            return () => unsubscribe();
-        }
-    }, [user]);
-    
-    
     return (
-        <AuthContext.Provider value={{ user, username, emailSignIn, emailSignUp, firebaseSignOut }}>
+        <AuthContext.Provider value={{ user, emailSignIn, emailSignUp, firebaseSignOut, uploadProfilePicture }}>
             {children}
         </AuthContext.Provider>
     );

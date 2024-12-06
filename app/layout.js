@@ -4,6 +4,7 @@ import { AlbumProvider } from "../_utils/album-context";
 import Header from "./components/header/header";
 import localFont from "next/font/local";
 import "./globals.css";
+import { UserContextProvider } from "@/_utils/user-context";
 
 const geistSans = localFont({
     src: "/fonts/GeistVF.woff",
@@ -25,14 +26,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className="bg-scroll bg-gradient-to-t from-zinc-950 to-zinc-700  h-full min-h-screen">
+            <body className="h-screen bg-vinyl">
+            {/* <body className="bg-scroll bg-gradient-to-t from-zinc-950 to-zinc-700 h-full min-h-screen "> */}
                 <AuthContextProvider>
-                    <TokenProvider>
-                        <AlbumProvider>
-                            <Header />
-                            {children}
-                        </AlbumProvider>
-                    </TokenProvider>
+                    <UserContextProvider>
+                        <TokenProvider>
+                            <AlbumProvider>
+                                <Header />
+                                <div className="w-7/12 my-0 mx-auto py-10">
+                                    {children}
+                                </div>
+                            </AlbumProvider>
+                        </TokenProvider>
+                    </UserContextProvider>
                 </AuthContextProvider>
             </body>
         </html>

@@ -3,28 +3,15 @@
 import { useState } from "react";
 import { useUserAuth } from "../_utils/auth";
 import { SignUpModal } from "./sign-up";
-import AlbumInfo from "./components/album-preview";
-import PopularTracks from "./components/popular";
+import AlbumPreview from "./components/album-preview";
 
 const HomePage = () => {
 
-    const {user, emailSignIn, emailSignUp, firebaseSignOut} = useUserAuth();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
+    const {user, firebaseSignOut} = useUserAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleSignIn = async () => {
-        try {
-            await emailSignIn(email, password);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
-
 
     const handleSignOut = async () => {
         try {
@@ -35,7 +22,6 @@ const HomePage = () => {
         }
     }
 
-    
     return (
         <main>
             <div>
@@ -43,8 +29,7 @@ const HomePage = () => {
                 (
                     <div>
                         {/* <h1>Album Information</h1> */}
-                        {/* <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" />
-                        <PopularTracks /> */}
+                        {/* <AlbumInfo albumId="0hvT3yIEysuuvkK73vgdcW" /> */}
                         <button className="mt-24" onClick={handleSignOut}>Sign Out</button>
                     </div>
                 ) : 

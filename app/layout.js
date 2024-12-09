@@ -5,6 +5,7 @@ import Header from "./components/header/header";
 import localFont from "next/font/local";
 import "./globals.css";
 import { UserContextProvider } from "@/_utils/user-context";
+import Image from "next/image";
 
 const geistSans = localFont({
     src: "/fonts/GeistVF.woff",
@@ -26,16 +27,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className="h-screen bg-vinyl">
-            {/* <body className="bg-scroll bg-gradient-to-t from-zinc-950 to-zinc-700 h-full min-h-screen "> */}
+            <body className="h-screen flex flex-col bg-vinyl">
                 <AuthContextProvider>
                     <UserContextProvider>
                         <TokenProvider>
                             <AlbumProvider>
                                 <Header />
-                                <div className="w-7/12 my-0 mx-auto py-10">
+                                <main className="flex-grow w-7/12 my-0 mx-auto py-10">
                                     {children}
-                                </div>
+                                </main>
+                                <footer className="sticky flex justify-center items-center gap-4 w-full text-center py-2 bg-black bg-opacity-10 text-white">
+                                    <p>Data and images provided by Spotify</p>
+                                    <Image 
+                                        width={100}
+                                        height={27}
+                                        src="/images/spotify-logo.png" 
+                                        alt="Spotify Logo" 
+                                        className="m"
+                                    />
+                                </footer>
                             </AlbumProvider>
                         </TokenProvider>
                     </UserContextProvider>

@@ -8,7 +8,7 @@ export async function getUser(username){
         const publicProfilesRef = collection(db, "publicProfiles");
         const q = query(publicProfilesRef, where("username", "==", username.toLowerCase()));
         const querySnapshot = await getDocs(q);
-        let user = "";
+        let user = {};
         if (!querySnapshot.empty) {
             querySnapshot.forEach((doc) => {
                 user = {
@@ -17,6 +17,22 @@ export async function getUser(username){
                 };
             });
         }
+
+        const reviewsRef = collection(db, "publicProfiles", user.id, "reviews");
+        const reviewsQuerySnapshot = await getDocs(reviewsRef);
+        const reviews = reviewsQuerySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        user.reviews = reviews;
+
+        const ratingsRef = collection(db, "publicProfiles", user.id, "ratings");
+        const ratingsQuerySnapshot = await getDocs(ratingsRef);
+        const ratings = ratingsQuerySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        user.ratings = ratings;
 
         return user;
     } catch (error) {
@@ -45,6 +61,28 @@ export async function updateUserProfile(userId, newProfile){
         }, { merge: true });
     } catch (error) {
         console.error(error);
+    }
+}
+
+
+export async function getProfilePic(username) {
+    try {
+        const usersRef = collection(db, "publicProfiles");
+        const usernameQuery = query(usersRef, where("username", "==", username));
+        const querySnapshot = await getDocs(usernameQuery);
+
+        if (querySnapshot.empty) {
+            console.warn("No user found with the specified username.");
+            return null;
+        }
+
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+
+        return userData.photoURL;
+    } catch (error) {
+        console.error("Error retrieving photoURL:", error);
+        return null;
     }
 }
 

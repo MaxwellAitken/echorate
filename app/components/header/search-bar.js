@@ -17,6 +17,8 @@ export const SearchBar = ({ onOpenSearch }) => {
         if (!searchQuery) return;
         
         router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+        onOpenSearch(false);
+        setIsOpen(false);
         if (inputRef.current) {
             inputRef.current.blur();
         }
@@ -25,7 +27,7 @@ export const SearchBar = ({ onOpenSearch }) => {
     // Open search bar
     const handleOpenSearch = () => {
         onOpenSearch(true);
-        setIsOpen(true)
+        setIsOpen(true);
     };
 
     // Close search bar

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useUserAuth } from "../_utils/auth";
 import { useRouter } from "next/navigation";
 
-export const SignUpModal = ({ isOpen, onClose }) => {
+export const SignUpModal = ({ onClose }) => {
 	
     const {emailSignUp} = useUserAuth();
     const [email, setEmail] = useState("");
@@ -10,7 +10,6 @@ export const SignUpModal = ({ isOpen, onClose }) => {
     const [username, setUsername] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
-	if (!isOpen) return null;
 	
 	const handleSignup = async (e) => {
 		e.preventDefault();

@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useToken } from "../../_utils/token-context";
 import { fetchAlbumSearchResults } from "@/_utils/spotifyApi";
 import Link from "next/link";
+import CircularImage from "../components/circular-image";
 
 const SettingsPage = () => {
 
@@ -104,7 +105,7 @@ const SettingsPage = () => {
         };
         await updateUserProfile(user.uid, newProfile);
         setProfile(newProfile);
-        router.refresh();
+        // router.refresh();
         setShowSavedMessage(true);
         setTimeout(() => setShowSavedMessage(false), 3000);
     };
@@ -122,7 +123,7 @@ const SettingsPage = () => {
         const [searchQuery, setSearchQuery] = useState("");
         const [searchResults, setSearchResults] = useState([]);
 
-        const handleAlbumMouseEnter = (index) => setAlbumHovering((prev) => ({ ...prev, [index]: true }))
+        const handleAlbumMouseEnter = (index) => setAlbumHovering((prev) => ({ ...prev, [index]: true }));
         const handleAlbumMouseLeave = (index) =>  setAlbumHovering((prev) => ({ ...prev, [index]: false }));
         
         const handleChangeAlbum = () => setAddAlbumModalOpen(true);
@@ -133,10 +134,10 @@ const SettingsPage = () => {
             if (searchQuery) {
             const searchAlbums = async () => {
                 try {
-                const results = await fetchAlbumSearchResults(searchQuery, token);
-                setSearchResults(results);
+                    const results = await fetchAlbumSearchResults(searchQuery, token);
+                    setSearchResults(results);
                 } catch (error) {
-                console.error("Error fetching album search results:", error);
+                    console.error("Error fetching album search results:", error);
                 }
             };
             searchAlbums();
@@ -145,6 +146,10 @@ const SettingsPage = () => {
 
         // Add an album to user's favorite albums
         const handleAlbumSelect = (album) => {
+            if (favoriteAlbums.some((favAlbum) => favAlbum.id === album.id)) {
+                setAddAlbumModalOpen(false);
+                return;
+            };
             setFavoriteAlbums((prev) => [...prev, album]);
             setAddAlbumModalOpen(false);
         };
@@ -187,9 +192,15 @@ const SettingsPage = () => {
                             />
 
                             {/* Add Album */}
-                            {albumHovering[index] && 
+                            {/* {albumHovering[index] && !album &&
                                 <label 
                                     className="absolute cursor-pointer bg-gray-800 bg-opacity-50 w-24 h-24 flex justify-center items-center bottom-0 text-white"
+                                >+
+                                </label>
+                            } */}
+                            {!album &&
+                                <label 
+                                    className="absolute cursor-pointer hover:bg-gray-800 bg-opacity-50 w-24 h-24 flex justify-center items-center bottom-0 text-white"
                                 >+
                                 </label>
                             }
@@ -202,7 +213,7 @@ const SettingsPage = () => {
                             {/* Remove Album */}
                             {albumHovering[index] && favoriteAlbums.length > index &&
                                 <button 
-                                    className="absolute top-0 right-0 " 
+                                    className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-gray-700 rounded-full w-6 h-6 flex justify-center items-center text-white" 
                                     onClick={() => setFavoriteAlbums((prev) => prev.filter((_, i) => i !== index))}
                                 >✖
                                 </button>
@@ -301,7 +312,7 @@ const SettingsPage = () => {
 
                             
                             {/* Profile Pic */}
-                            <div className="flex flex-col items-start relative">
+                            <div className="flex flex-col items-start relative gap-2">
                                 <label className="block font-medium text-white">
                                     Profile Picture
                                 </label>
@@ -313,7 +324,7 @@ const SettingsPage = () => {
                                     onChange={handleFileChange} 
                                 />
                                 <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                                    <Image width={96} height={96} className="rounded-full" src={filePreview || user.photoURL} alt={user.displayName} />
+                                    <CircularImage size={128} src={filePreview || user.photoURL} alt={user.displayName} />
                                     {profileHovering && 
                                         <label 
                                             htmlFor="fileInput" 
@@ -331,7 +342,7 @@ const SettingsPage = () => {
                 </div>
             ) : 
             (
-                <SignInModal isOpen={true} onClose={handleCloseModal} />
+                <SignInModal onClose={handleCloseModal} />
             )
             }
         </div>

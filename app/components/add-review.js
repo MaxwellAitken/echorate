@@ -27,9 +27,9 @@ export const AddReview = ({ album, onClose }) => {
     const [review, setReview] = useState({
         album: null,
         date: new Date(),
-        relisten: userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id) ? true : false,
+        relisten: userData?.ratings?.find(rating => rating.album.id === selectedAlbum?.id) ? true : false,
         text: "",
-        rating: userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id) ? userData?.ratings?.find(rating => rating.album.id === selectedAlbum.id).rating : 0,
+        rating: userData?.ratings?.find(rating => rating.album.id === selectedAlbum?.id) ? userData?.ratings?.find(rating => rating.album.id === selectedAlbum?.id).rating : 0,
     });
 
     useEffect(() => {
@@ -158,7 +158,7 @@ export const AddReview = ({ album, onClose }) => {
         let newReview = {
             username: user.displayName,
             album: selectedAlbum,
-            date: review.date.toISOString(),
+            date: review.date,
             relisten: review.relisten,
             text: review.text,
             rating: review.rating,
@@ -288,7 +288,7 @@ export const AddReview = ({ album, onClose }) => {
                                     {/* Review body */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">
-                                            Review
+                                            Add a review...
                                         </label>
                                         <textarea
                                             name="text"
@@ -296,7 +296,6 @@ export const AddReview = ({ album, onClose }) => {
                                             onChange={handleInputChange}
                                             className="text-gray-800 w-full mt-1 p-2 border rounded-lg focus:outline-none"
                                             rows="4"
-                                            required
                                         />
                                     </div>
 

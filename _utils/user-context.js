@@ -19,7 +19,6 @@ export const UserContextProvider = ({ children }) => {
             const userDoc = await getDoc(userRef);
             if (userDoc.exists()) {
                 setUserData(userDoc.data());
-                console.log("User data fetched:", userDoc.data());
             }
         } catch (error) {
             console.error("Error fetching user data:", error.message);

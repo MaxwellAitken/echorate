@@ -28,8 +28,20 @@ body {
 }
 
 .bg-vinyl {
-  background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 1%, transparent 1%),
-    radial-gradient(circle, rgba(0, 0, 0, 0.4) 2%, transparent 2%);
-  background-size: 10% 10%;
-  background-color: #111;
+  /* background-image: url("/images/77.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh; */
+
+  background-image: url("/images/great.jpg");
+  background-position-x: 0px;
+  background-position-y: -1px;
+  background-size: auto 50%;
+  background-repeat: repeat-x;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+  background-color: #181c1c;
 }

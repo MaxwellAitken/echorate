@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useUserAuth } from "../../../_utils/auth";
 
-export const SignInModal = ({ isOpen, onClose }) => {
+export const SignInModal = ({ onClose }) => {
 	
     const {emailSignIn} = useUserAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-        
-	if (!isOpen) return null;
 	
 	const handleSignin = async (e) => {
 		e.preventDefault();

@@ -130,63 +130,11 @@ export const AuthContextProvider = ({ children }) => {
     };
 
 
-    // // Fetch user reviews from Firestore
-    // const fetchUserReviews = async (uid) => {
-    //     try {
-    //         const allReviews = collection(db, "users", uid, "reviews");
-    //         const allReviewsQuery = query(allReviews);
-    //         const allReviewsSnapshot = await getDocs(allReviewsQuery);
-    //         let reviewList = [];
-    //         allReviewsSnapshot.forEach((doc) => {
-    //             let thisReview = {
-    //                 id: doc.id,
-    //                 ...doc.data()
-    //             };
-    //             reviewList.push(thisReview);
-    //         });
-    //         setUserData(prevUserData => ({ 
-    //             ...prevUserData,
-    //              reviews: reviewList 
-    //         }));
-    //     } catch (error) {
-    //         console.error("Error fetching user data:", error.message);
-    //     }
-    // };
-
-
-    // // Fetch user ratings from Firestore
-    // const fetchUserRatings = async (uid) => {
-    //     try {
-    //         const allRatings = collection(db, "users", uid, "ratings");
-    //         const allRatingsQuery = query(allRatings);
-    //         const allRatingsSnapshot = await getDocs(allRatingsQuery);
-    //         let ratingList = [];
-    //         allRatingsSnapshot.forEach((doc) => {
-    //             let thisRating = {
-    //                 id: doc.id,
-    //                 ...doc.data()
-    //             };
-    //             ratingList.push(thisRating);
-    //         });
-    //         setUserData(prevUserData => ({ 
-    //             ...prevUserData,
-    //             ratings: ratingList 
-    //         }));
-    //     } catch (error) {
-    //         console.error("Error fetching user data:", error.message);
-    //     }
-    // };
-
-
-
     // Listen for user state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
-                // await fetchUserData(currentUser.uid);
-                // await fetchUserReviews(currentUser.uid);
-                // await fetchUserRatings(currentUser.uid);
             } else {
                 setUser(null);
             }

@@ -1,29 +1,69 @@
+// "use client";
+
+// import { createContext, useContext, useState, useEffect } from "react";
+
+// const TokenContext = createContext();
+
+// export const TokenProvider = ({ children }) => {
+//     const [token, setToken] = useState(null);
+
+//     const fetchToken = async () => {
+//         try {
+//             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/token`);
+//             const data = await response.json();
+//             setToken(data.token);
+//         } catch (error) {
+//             console.error("Error fetching token:", error);
+//         }
+//     };
+
+//     const refreshToken = async () => {
+//         await fetchToken();
+//     };
+
+//     useEffect(() => {
+//         fetchToken();
+//     }, []);
+
+//     return (
+//         <TokenContext.Provider value={{ token, refreshToken }}>
+//             {children}
+//         </TokenContext.Provider>
+//     );
+// };
+
+// export const useToken = () => {
+//     return useContext(TokenContext);
+// };
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const TokenContext = createContext();
 
 export const TokenProvider = ({ children }) => {
     const [token, setToken] = useState(null);
 
-    const fetchToken = async () => {
+    const fetchToken = useCallback(async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/token`);
-            const data = await response.json();
-            setToken(data.token);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/token`);
+          const data = await response.json();
+          setToken(data.token);
         } catch (error) {
-            console.error("Error fetching token:", error);
+          console.error("Error fetching token:", error);
         }
-    };
+      }, []);
 
-    const refreshToken = async () => {
+
+    const refreshToken = useCallback(async () => {
         await fetchToken();
-    };
+    }, [fetchToken]);
 
     useEffect(() => {
-        fetchToken();
-    }, []);
+        if (!token) {
+            fetchToken();
+        }
+    }, [fetchToken, token]);
 
     return (
         <TokenContext.Provider value={{ token, refreshToken }}>

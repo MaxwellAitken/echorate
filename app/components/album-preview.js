@@ -7,7 +7,7 @@ import Image from "next/image";
 import VinylIcon from "../../public/images/vinyl-icon.svg";
 import Ellipsis from "../../public/images/ellipsis.svg";
 import { StarRating } from "./star-rating";
-import { addRatingToAlbum, addRatingToUser } from "../../_services/review-service";
+import { addRatingToAlbum, addRatingToUser, deleteRatingFromAlbum, deleteRatingFromUser } from "../../_services/review-service";
 import { AddReview } from "./add-review";
 import { updateUserQueue } from "@/_services/user-service";
 import Notification from "./notification";
@@ -45,6 +45,7 @@ const AlbumPreview = ({ album, size }) => {
             checkIfUserReviewedAlbum();
         }
     }, [user, album, userData, loading]);
+    
 
     let fill = "text-gray-100";
     if (userReviewedAlbum) fill = "text-green-500";
@@ -52,18 +53,25 @@ const AlbumPreview = ({ album, size }) => {
     const handleRatingChange = async (newRating) => {
         if (newRating === rating) {
             return;
-        } else {
+        } 
+        else if (newRating === 0) {
+            setRating(0);
+            await deleteRatingFromUser(user.uid, album.id);
+            deleteRatingFromAlbum(user.uid, album.id);
+        }
+        else {
             setRating(newRating);
             let newUserRating = {
                 username: user.displayName,
                 album: album,
                 rating: newRating,
+                date: new Date(),
+                relisten: userReviewedAlbum,
             };
             await addRatingToUser(user.uid, newUserRating);
             addRatingToAlbum(user.uid, album.id, newUserRating);
         }
     };
-
 
     const handleAddToQueue = async () => {
         if (alreadyQueued) return;
@@ -81,8 +89,6 @@ const AlbumPreview = ({ album, size }) => {
         setAlreadyQueued(true);
         setShowNotification(true);
     };
-    
-
 
     const handleRemoveFromQueue = async () => {
         let newQueue = userData.queue.filter(queueItem => queueItem.album.id !== album.id);
@@ -152,8 +158,8 @@ const AlbumPreview = ({ album, size }) => {
                             {menuIsOpen && 
                             (
                                 <div onMouseLeave={handleCloseMenu} className="absolute bottom-0 mb-2 left-1/2 ml-12  bg-gray-400 rounded-sm z-50 shadow-xl shadow-black">
-                                    <div className="flex flex-col relative" style={{width: `${size}px`}}>
-                                        <div className="px-6 h-16">
+                                    <div className="flex flex-col relative" >
+                                        <div className="px-6 py-2">
                                             <StarRating currentRating={rating} onRatingChange={handleRatingChange} />
                                         </div>
                                         <button onClick={handleOpenReviewModal} className="text-gray-800 hover:bg-gray-700 hover:text-white px-8 whitespace-nowrap py-2 rounded-sm text-sm">Review album</button>

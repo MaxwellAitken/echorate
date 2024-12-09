@@ -1,36 +1,45 @@
-import axios from 'axios';
-const cache = new Map();
+import { fetchAlbumDetails } from "../../../../../_utils/spotifyApi";
+import { getReviewsByAlbum, getNumberOfRatings } from "../../../../../_services/review-service";
+import { getToken } from "@/_services/token-service";
 
 export async function GET(req, { params }) {
+  const { id: albumId } = params;
 
-    const { id } = params;
-    const token = req.headers.get('authorization');
+  if (!albumId) {
+    return new Response(JSON.stringify({ error: "Album ID is required" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
-    if (cache.has(id)) {
-        return new Response(JSON.stringify(cache.get(id)), { status: 200 });
+  try {
+    const token = await getToken();
+    const albumDetails = await fetchAlbumDetails(albumId, token);
+
+    const reviews = await getReviewsByAlbum(albumId);
+    const numberOfRatings = await getNumberOfRatings(albumId);
+    const avgRating =
+      reviews.length > 0
+        ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+        : null;
+
+    return new Response(
+      JSON.stringify({
+        albumDetails,
+        reviews,
+        avgRating,
+        numberOfRatings,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
       }
-
-    try {
-        const response = await axios.get(`https://api.spotify.com/v1/albums/${id}`, {
-            headers: {
-                Authorization: token,
-            },
-        });
-        const albumData = response.data;
-
-        cache.set(id, albumData);
-        setTimeout(() => cache.delete(id), 60 * 60 * 1000); // Cache expires after 1 hour
-    
-
-        return new Response(JSON.stringify(response.data), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-        });
-    } catch (error) {
-        console.error('Error fetching album:', error.message);
-        return new Response(JSON.stringify({ error: 'Error fetching album' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
-    }
+    );
+  } catch (error) {
+    console.error("Error fetching album or reviews:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }

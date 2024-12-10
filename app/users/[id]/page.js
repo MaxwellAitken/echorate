@@ -51,12 +51,25 @@ export default function UserReviewsPage() {
     }, [username, user, isOwnPage, userData]);
 
 
+    // const getDate = (timestamp) => {
+    //     if (timestamp.toDate) {
+    //         return timestamp.toDate();
+    //     }
+    //     return new Date(timestamp.seconds * 1000); 
+    // }
     const getDate = (timestamp) => {
+        if (!timestamp) return new Date(0);
         if (timestamp.toDate) {
             return timestamp.toDate();
         }
-        return new Date(timestamp.seconds * 1000); 
-    }
+        if (timestamp.seconds) {
+            return new Date(Number(timestamp.seconds) * 1000);
+        }
+        return new Date(timestamp);
+    };
+    
+
+
 
     const convertDate = (timestamp) => {
         const date = getDate(timestamp);
@@ -85,7 +98,7 @@ export default function UserReviewsPage() {
                 </div>
             );
         }
-
+        
         const handleHoverReview = (index) => setReviewToolTipOpen((prev) => ({ ...prev, [index]: true }));
         const handleUnHoverReview = (index) => setReviewToolTipOpen((prev) => ({ ...prev, [index]: false }));
     

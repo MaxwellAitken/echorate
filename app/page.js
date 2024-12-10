@@ -75,46 +75,44 @@ const HomePage = () => {
         }
         
         return (
-            <div>
+            <div className="flex flex-col">
                 <div className="border-b-2 border-gray-600"></div>
-                <div className="flex flex-col gap-6">
-                    {reviews.slice(0, 4).map((review) => {
+                {reviews.slice(0, 4).map((review) => {
 
-                        return (
-                            <div key={review.reviewId} className="flex gap-4 border-b-2 border-gray-600 py-4">
+                    return (
+                        <div key={review.reviewId} className="flex gap-4 border-b-2 border-gray-600 py-4">
 
-                                <div key={review.reviewId} className="flex gap-4">
-                                    <div className="flex-shrink-0">
-                                        <AlbumPreview album={review.album} size={164} />
+                            <div key={review.reviewId} className="flex gap-4">
+                                <div className="flex-shrink-0">
+                                    <AlbumPreview album={review.album} size={164} />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex gap-2 items-center">
+                                        <Link href={`/albums/${review.album.id}`}>
+                                            <h2 className="text-lg font-bold">{review.album.name}</h2>
+                                        </Link>
+                                        <p className="text-gray-400">{review.album.release_date?.split("-")[0]}</p>
                                     </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex gap-2 items-center">
-                                            <Link href={`/albums/${review.album.id}`}>
-                                                <h2 className="text-lg font-bold">{review.album.name}</h2>
-                                            </Link>
-                                            <p className="text-gray-400">{review.album.release_date?.split("-")[0]}</p>
+                                    <div className="flex items-center gap-2">
+                                        <Link className="flex items-center gap-2" href={`/users/${review.username}`}>
+                                            <CircularImage src={profilePics.find(item => item.username === review.username)?.url} alt={"user"} size={32} />
+                                            {review.username}
+                                        </Link>
+                                        <div className="-mt-1.5">
+                                            <StaticRating color="fill-green-500" scale={0.75} rating={review.rating} />
                                         </div>
-
-                                        <div className="flex items-center gap-2">
-                                            <Link className="flex items-center gap-2" href={`/users/${review.username}`}>
-                                                <CircularImage src={profilePics.find(item => item.username === review.username)?.url} alt={"user"} size={32} />
-                                                {review.username}
-                                            </Link>
-                                            <div className="-mt-1.5">
-                                                <StaticRating color="fill-green-500" scale={0.75} rating={review.rating} />
-                                            </div>
-                                            {/* <div style={{marginLeft: `${Math.round((review.rating ** 1.65) * -2)}px`}} className="text-sm mt-[3px]">
-                                            </div> */}
-                                        </div>
-
-                                        <p className="mt-2">{review.text.length > 400 ? `${review.text.slice(0, 400)}...` : review.text}</p>
+                                        {/* <div style={{marginLeft: `${Math.round((review.rating ** 1.65) * -2)}px`}} className="text-sm mt-[3px]">
+                                        </div> */}
                                     </div>
+
+                                    <p className="mt-2">{review.text.length > 400 ? `${review.text.slice(0, 400)}...` : review.text}</p>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
+                        </div>
+                    );
+                })}
             </div>
         )
     }
@@ -151,7 +149,7 @@ const HomePage = () => {
         <div>
             {user ? 
             (
-                <div className="flex flex-col gap-12 mt-16 items-center">
+                <div className="flex flex-col gap-16 mt-16 items-center">
 
                     <div className="flex flex-col gap-2 items-center text-3xl text-gray-400 text-center">
                         <p>

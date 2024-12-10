@@ -220,7 +220,7 @@ export const AddReview = ({ album, onClose }) => {
                 //Review Modal
                 (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-gray-500 p-6 rounded-lg shadow-lg  flex gap-8 items-start w-7/12">
+                        <div className="bg-gray-600 p-6 rounded-lg shadow-lg  flex gap-8 items-start w-7/12">
                             {/* Modal Header */}
                             <div className="flex  flex-col gap-8 items-start">
                                 <button className="text-gray-800 bg-gray-200 p-2" onClick={handleGoBack}>back</button>
@@ -236,7 +236,7 @@ export const AddReview = ({ album, onClose }) => {
                             {/* Modal Content */}
                             <div className="flex flex-col gap-4">
 
-                                <h2 className="text-lg">My review of...</h2>
+                                <h2 className="text-gray-400">My review of...</h2>
 
                                 <div className="flex flex-col mb-4">
                                     <div>
@@ -255,7 +255,7 @@ export const AddReview = ({ album, onClose }) => {
                                         
                                         {/* Date */}
                                         <div className="flex gap-2 items-center justify-start">
-                                            <label className="block text-sm font-medium text-gray-700">
+                                            <label className="block text-sm font-medium text-gray-400">
                                                 Listened on
                                             </label>
                                             <DatePicker
@@ -276,9 +276,9 @@ export const AddReview = ({ album, onClose }) => {
                                                 value={review.relisten}
                                                 onChange={handleInputChange}
                                                 defaultChecked={review.relisten}
-                                                className="text-gray-800 min-w-3 mt-1  border rounded-lg focus:outline-none"
+                                                className="text-gray-800 min-w-3  rounded-lg focus:outline-none"
                                             />
-                                            <label className="block text-sm font-medium text-gray-700">
+                                            <label className="block text-sm font-medium text-gray-400">
                                                 I&apos;ve heard this album before
                                             </label>
                                         </div>
@@ -287,7 +287,7 @@ export const AddReview = ({ album, onClose }) => {
 
                                     {/* Review body */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block text-sm font-medium text-gray-400">
                                             Add a review...
                                         </label>
                                         <textarea
@@ -301,7 +301,7 @@ export const AddReview = ({ album, onClose }) => {
 
 
                                     {/* Rating */}
-                                    <label className="block text-sm font-medium text-gray-700">
+                                    <label className="block text-sm font-medium text-gray-400">
                                         Rating
                                     </label>
                                     <div className="w-1/2">

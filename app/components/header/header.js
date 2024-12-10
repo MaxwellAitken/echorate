@@ -11,7 +11,7 @@ import SignInModal from "./sign-in-modal.js";
 import SignUpModal from "../../sign-up.js";
 import CircularImage from "../circular-image";
 
-let headerStyle = "max-h-18 sticky z-50 top-0 flex justify-center py-4 bg-zinc-900";
+let headerStyle = "max-h-18 sticky z-50 top-0 flex justify-center py-4";
 let buttonStyle = "rounded-lg bg-gray-800 drop-shadow-2xl hover:cursor-pointer hover:bg-gray-500 px-2.5 py-2 text-sm";
 
 export default function Header(){
@@ -40,7 +40,7 @@ export default function Header(){
 
 
     return (
-        <div className={headerStyle}>
+        <div style={{backgroundColor: "#0f1111"}} className={headerStyle}>
             <div className="flex items-center justify-between gap-16 w-7/12 relative">
                 <Link className="flex gap-1" href="/">
                     {/* <CircularImage src="/images/echoRateLogo.png" alt="logo" size={50} /> */}

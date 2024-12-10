@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaSearch } from 'react-icons/fa';
+import { set } from "date-fns";
 
 export const SearchBar = ({ onOpenSearch }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +18,7 @@ export const SearchBar = ({ onOpenSearch }) => {
         if (!searchQuery) return;
         
         router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setSearchQuery("");
         onOpenSearch(false);
         setIsOpen(false);
         if (inputRef.current) {

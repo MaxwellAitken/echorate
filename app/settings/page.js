@@ -165,61 +165,55 @@ const SettingsPage = () => {
 
 
         return (
-            <div className="flex flex-col gap-8 w-6/12">
+            <div className="flex flex-col gap-8 w-7/12">
                 <h1 className="text-lg">Favorite Albums</h1>
 
-                <div className="flex gap-4 items-center justify-between">
+                <div className="flex gap-3 items-center justify-between">
 
                     {(favoriteAlbums?.length < 4
                         ? [...favoriteAlbums || [], ...Array(4 - (favoriteAlbums?.length || 0)).fill(null)]
                         : favoriteAlbums
                     ).slice(0, 4).map((album, index) => (
 
-                        <div 
-                            key={album?.id || `placeholder-${index}`} 
-                            className="relative" 
-                            onMouseEnter={() => handleAlbumMouseEnter(index)} 
-                            onMouseLeave={() => handleAlbumMouseLeave(index)}
-                            onClick={handleChangeAlbum}
-                        >
+                        <div className="flex gap-3 items-center w-full justify-evenly" key={album?.id || `placeholder-${index}`}>
+                            <div className="relative"
+                                onMouseEnter={() => handleAlbumMouseEnter(index)} 
+                                onMouseLeave={() => handleAlbumMouseLeave(index)}
+                                onClick={handleChangeAlbum}
+                            >
 
-                            <Image
-                                width={96}
-                                height={96}
-                                className="hover:cursor-pointer shadow-md shadow-black"
-                                src={album?.images?.[0]?.url || "/images/album-placeholder.png"}
-                                alt={album?.name || "Placeholder album"}
-                            />
+                                <Image
+                                    width={112}
+                                    height={112}
+                                    className="hover:cursor-pointer shadow-md shadow-black"
+                                    src={album?.images?.[0]?.url || "/images/album-placeholder.png"}
+                                    alt={album?.name || "Placeholder album"}
+                                />
 
-                            {/* Add Album */}
-                            {/* {albumHovering[index] && !album &&
-                                <label 
-                                    className="absolute cursor-pointer bg-gray-800 bg-opacity-50 w-24 h-24 flex justify-center items-center bottom-0 text-white"
-                                >+
-                                </label>
-                            } */}
-                            {!album &&
-                                <label 
-                                    className="absolute cursor-pointer hover:bg-gray-800 bg-opacity-50 w-24 h-24 flex justify-center items-center bottom-0 text-white"
-                                >+
-                                </label>
-                            }
+                                {!album &&
+                                    <label 
+                                        className="absolute cursor-pointer hover:bg-gray-800 bg-opacity-50 w-28 h-28 flex justify-center items-center bottom-0 text-white"
+                                    >+
+                                    </label>
+                                }
+                                
+
+                                {/* Remove Album */}
+                                {albumHovering[index] && favoriteAlbums.length > index &&
+                                    <button 
+                                        className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-gray-700 rounded-full w-6 h-6 flex justify-center items-center text-white" 
+                                        onClick={() => setFavoriteAlbums((prev) => prev.filter((_, i) => i !== index))}
+                                    >✖
+                                    </button>
+                                }
+                            </div>
                             
                             {/* Swap Albums */}
-                            {index !== 3 && favoriteAlbums.length > index + 1 &&
-                                <button className="absolute top-1/2 -translate-y-1/2 left-full ml-3" onMouseEnter={() => handleAlbumMouseLeave(index)} onClick={() => handleSwapAlbum(index)}>⇄</button>
-                            }
-
-                            {/* Remove Album */}
-                            {albumHovering[index] && favoriteAlbums.length > index &&
-                                <button 
-                                    className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-gray-700 rounded-full w-6 h-6 flex justify-center items-center text-white" 
-                                    onClick={() => setFavoriteAlbums((prev) => prev.filter((_, i) => i !== index))}
-                                >✖
-                                </button>
+                            {index !== 3 && favoriteAlbums.length > index + 1 ?
+                                (<button onMouseEnter={() => handleAlbumMouseLeave(index)} onClick={() => handleSwapAlbum(index)}>⇄</button>)
+                                : <div></div>
                             }
                         </div>
-
                     ))}
                 </div>
 
@@ -281,7 +275,7 @@ const SettingsPage = () => {
 
                     <form className="flex justify-between" onSubmit={handleSubmit}>
 
-                        <div className="flex flex-col gap-8 w-5/12">
+                        <div className="flex flex-col gap-8 w-1/3">
                             {/* Email */}
                             <div className="flex flex-col">
                                 <label className="block font-medium text-white">
@@ -301,12 +295,13 @@ const SettingsPage = () => {
                                 <label className="block font-medium text-white">
                                     Bio
                                 </label>
-                                <input
+                                <textarea
                                     className="p-1 rounded-md text-black"
                                     name="bio"
                                     type="text"
                                     value={user.bio || profile.bio}
                                     onChange={handleInputChange}
+                                    rows={4}
                                 />
                             </div>
 
@@ -328,7 +323,7 @@ const SettingsPage = () => {
                                     {profileHovering && 
                                         <label 
                                             htmlFor="fileInput" 
-                                            className="absolute cursor-pointer bg-gray-800 bg-opacity-50 w-24 h-24 flex justify-center items-center rounded-full bottom-0 text-white"
+                                            className="absolute cursor-pointer bg-gray-800 bg-opacity-50 w-32 h-32 flex justify-center items-center rounded-full bottom-0 text-white"
                                         >Change
                                         </label>
                                     }

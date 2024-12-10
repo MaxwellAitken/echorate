@@ -37,7 +37,7 @@ body {
 
   background-image: url("/images/great.jpg");
   background-position-x: 0px;
-  background-position-y: -1px;
+  background-position-y: 0px;
   background-size: auto 50%;
   background-repeat: repeat-x;
   background-attachment: initial;

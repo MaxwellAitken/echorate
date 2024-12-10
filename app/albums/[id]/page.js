@@ -9,7 +9,6 @@ import { getAvgRating, getNumberOfRatings, getAlbumRank, getAlbumRankByYear, get
 import { getProfilePic } from "../../../_services/user-service";
 import { useUserAuth } from "@/_utils/auth";
 import AlbumMenu from "@/app/components/album-menu";
-import { set } from "date-fns";
 import CircularImage from "@/app/components/circular-image";
 
 const AlbumPage = () => {
@@ -199,19 +198,21 @@ const AlbumPage = () => {
                                             <div className="flex flex-col gap-1">
                                                 <div className="flex gap-2">
                                                     <span className="text-gray-400 font-bold">{FormatTrackName(track.name)}</span>
-                                                    {/* <Link href={`/tracks/${track.id}`}>
-                                                        <span className="text-white font-bold">{track.name}</span>
-                                                    </Link> */}
                                                     <span className="text-gray-500">{formatTime(track.duration_ms)}</span>
                                                 </div>
                                                 {track.artists.length > 1 && 
                                                 (
                                                     <div>
                                                         <span className="text-gray-200">feat.</span>
-                                                        {track.artists.slice(1).map((artist) => 
+                                                        {track.artists.slice(1).map((artist, index) => 
                                                         (
                                                             <Link key={artist.id} href={`/artists/${artist.id}`}>
-                                                                <span className="text-green-600 hover:text-green-300 font-semibold ml-1">{artist.name}</span>
+                                                                <span className="text-green-600 hover:text-green-300 font-semibold ml-1">
+                                                                    {artist.name}
+                                                                </span>
+                                                                <span className="text-gray-200">
+                                                                    {index < track.artists.length - 2 ? "," : ""}
+                                                                </span>
                                                             </Link>
                                                         )
                                                         )}
@@ -237,9 +238,22 @@ const AlbumPage = () => {
                                 <tr>
                                     <td className={tableDataClass}>{albumDetails.artists.length > 1 ? "Artists" : "Artist"}</td>
                                     <td className={tableDataClass}>
-                                        <Link className="text-green-600 hover:text-green-300 font-bold" href={`/artists/${albumDetails.artists[0].id}`}>
+                                        {/* <Link className="text-green-600 hover:text-green-300 font-bold" href={`/artists/${albumDetails.artists[0].id}`}>
                                             {albumDetails.artists.map((artist) => artist.name).join(", ")}
-                                        </Link>
+                                        </Link> */}
+                                        
+                                        {albumDetails.artists.map((artist, index) => 
+                                        (
+                                            <Link key={artist.id} href={`/artists/${artist.id}`}>
+                                                <span className="text-green-600 hover:text-green-300 font-semibold ml-1">
+                                                    {artist.name}
+                                                </span>
+                                                <span className="text-gray-200">
+                                                    {index < albumDetails.artists.length - 1 ? "," : ""}
+                                                </span>
+                                            </Link>
+                                        )
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>

@@ -25,15 +25,14 @@ const DropdownMenu = () => {
         }
     }
     
-    isOpen ? hoverStyle = "bg-gray-500" : hoverStyle = "bg-zinc-900";
+    isOpen ? hoverStyle = " bg-[#6b7280]" : hoverStyle = " bg-[#0f1111]";
 
     let linkStyle = "w-full py-2 px-4 text-gray-900 hover:text-white hover:bg-gray-600";
 
     return (
-        <div className={"relative hover:cursor-pointer rounded-lg " + hoverStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div  className={"relative hover:cursor-pointer rounded-lg" + hoverStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <div className={"flex gap-2 items-center px-4 py-1 rounded-t-sm " + hoverStyle}>
-            <CircularImage size={50} className="rounded-full"  src={user.photoURL} alt={user.displayName} />
-            {/* <CircularImage size={36} className="max-h-8"  src={user.photoURL} alt={user.displayName} /> */}
+            <CircularImage size={36} className="rounded-full"  src={user.photoURL} alt={user.displayName} />
                 <div className="flex flex-col justify-between py-2 text-slate-300 font-semi-bold uppercase">
                     <p>{user.displayName}</p>
                 </div>

@@ -102,7 +102,7 @@ const AlbumMenu = ({ album, size }) => {
             (
                 user ? 
                 (
-                    <div className="shadow-md shadow-black w-full cursor-pointer rounded-sm flex mt-8">
+                    <div className="shadow-md shadow-black w-full rounded-sm flex mt-8">
                             <div>
                                 <div className="bg-gray-400 rounded-sm z-50 shadow-xl shadow-black">
                                     <div className="flex flex-col relative" >

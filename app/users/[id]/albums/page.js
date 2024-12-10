@@ -49,7 +49,7 @@ export default function UserAlbumsPage() {
             }
             loadUser();
         }
-    }, [username, user, isOwnPage]);
+    }, [username, user, isOwnPage, userData]);
 
 
     const getDate = (timestamp) => {

@@ -20,6 +20,10 @@ const HomePage = () => {
     const [albumsLoading, setAlbumsLoading] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [popularAlbums, setPopularAlbums] = useState([]);
+    const [profilePics, setProfilePics] = useState({
+        username: "",
+        url: "",
+    });
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -31,6 +35,15 @@ const HomePage = () => {
             try {
                 const fetchedReviews = await getAllReviews();
                 setReviews(fetchedReviews);
+
+                const promises = fetchedReviews.map(async (review) => {
+                    const photoURL = await getProfilePic(review.username);
+                    return { username: review.username, url: photoURL };
+                });
+            
+                const results = await Promise.all(promises);
+                setProfilePics(results);
+
                 const fetchedPopularAlbums = await getPopularAlbums();
                 setPopularAlbums(fetchedPopularAlbums);
             } catch (error) {
@@ -41,6 +54,16 @@ const HomePage = () => {
         };
         fetchData();
     }, []);
+    
+    const getPhotoURL = async (username) => {
+        try {
+            const photoURL = await getProfilePic(username); 
+            return photoURL;
+        } catch (error) {
+            console.error("Error fetching profile picture:", error);
+            return null;
+        }
+    };
 
     function RecentReviews() {
         if (loading) {
@@ -51,30 +74,11 @@ const HomePage = () => {
             return <p>No reviews yet</p>
         }
         
-        const getPhotoURL = async (username) => {
-            try {
-                const photoURL = await getProfilePic(username); 
-                return photoURL;
-            } catch (error) {
-                console.error("Error fetching profile picture:", error);
-                return null;
-            }
-        };
-
         return (
             <div>
                 <div className="border-b-2 border-gray-600"></div>
                 <div className="flex flex-col gap-6">
                     {reviews.slice(0, 4).map((review) => {
-                        const [profilePic, setProfilePic] = useState(null);
-
-                        useEffect(() => {
-                            const fetchProfilePic = async () => {
-                                const pic = await getPhotoURL(review.username);
-                                setProfilePic(pic);
-                            };
-                            fetchProfilePic();
-                        }, [review.username]);
 
                         return (
                             <div key={review.reviewId} className="flex gap-4 border-b-2 border-gray-600 py-4">
@@ -94,7 +98,7 @@ const HomePage = () => {
 
                                         <div className="flex items-center gap-2">
                                             <Link className="flex items-center gap-2" href={`/users/${review.username}`}>
-                                                <CircularImage src={profilePic} alt={"user"} size={32} />
+                                                <CircularImage src={profilePics.find(item => item.username === review.username)?.url} alt={"user"} size={32} />
                                                 {review.username}
                                             </Link>
                                             <div className="-mt-1.5">

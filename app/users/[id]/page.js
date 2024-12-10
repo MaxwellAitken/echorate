@@ -48,7 +48,7 @@ export default function UserReviewsPage() {
             }
             loadUser();
         }
-    }, [username, user, isOwnPage]);
+    }, [username, user, isOwnPage, userData]);
 
 
     const getDate = (timestamp) => {

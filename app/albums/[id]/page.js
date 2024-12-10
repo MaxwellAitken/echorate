@@ -19,6 +19,7 @@ const AlbumPage = () => {
     const [albumDetails, setAlbumDetails] = useState(null);
     const [artistDetails, setArtistDetails] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [profilePics, setProfilePics] = useState([]);
     const [numberOfRatings, setNumberOfRatings] = useState(null);
     const [avgRating, setAvgRating] = useState(null);
     const [albumRank, setAlbumRank] = useState(null);
@@ -48,6 +49,14 @@ const AlbumPage = () => {
             const albumRankByYear = await getAlbumRankByYear(data.albumDetails.id, data.albumDetails.release_date.split("-")[0]);
             setAlbumRankByYear(albumRankByYear);
 
+            
+            const promises = data.reviews.map(async (review) => {
+                const photoURL = await getProfilePic(review.username);
+                return { username: review.username, url: photoURL };
+            });
+        
+            const results = await Promise.all(promises);
+            setProfilePics(results);
             // const reviews = await getReviewsByAlbum(data.albumDetails.id);
             // setReviews(reviews);
             // const avgRating = await getAvgRating(data.albumDetails.id);
@@ -132,22 +141,12 @@ const AlbumPage = () => {
                     {reviews.length > 0 ? 
                     (
                         reviews.slice(0, 4).map((review) => {
-                            const [profilePic, setProfilePic] = useState(null);
-
-                            useEffect(() => {
-                                const fetchProfilePic = async () => {
-                                    const pic = await getPhotoURL(review.username);
-                                    setProfilePic(pic);
-                                };
-                                fetchProfilePic();
-                            }, [review.username]);
-
                             return (
                                 <div key={review.id} className="flex gap-4 border-b-2 border-gray-600 pb-2">
                                     <div className="flex flex-col gap-2 w-12">
                                         <div className="flex gap-2">
-                                            {profilePic ? (
-                                                <CircularImage src={profilePic} alt={`${review.username}'s profile`} size={50} />
+                                            {profilePics ? (
+                                                <CircularImage src={profilePics.find(item => item.username === review.username)?.url} alt={`${review.username}'s profile`} size={50} />
                                             ) : (
                                                 <span className="text-white font-bold">{review.username}</span>
                                             )}

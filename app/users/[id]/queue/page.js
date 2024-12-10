@@ -50,7 +50,7 @@ export default function UserQueuePage() {
             }
             loadUser();
         }
-    }, [username, user, isOwnPage]);
+    }, [username, user, isOwnPage, userData]);
 
     return (
         <div>

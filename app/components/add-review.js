@@ -171,7 +171,7 @@ export const AddReview = ({ album, onClose }) => {
     // Focus on album search input
     useEffect(() => {
         if (selectedAlbum === null) inputRef.current.focus();
-    }, []);
+    }, [selectedAlbum]);
     
     return (
         <div className="relative ml-36">

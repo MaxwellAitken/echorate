@@ -32,7 +32,7 @@ export const SignUpModal = ({ onClose }) => {
     }
 	
 	return (
-		<div className="fixed top-0 left-0 bottom-0 right-0 bg-black bg-opacity-50 flex justify-center items-center">
+		<div className="fixed z-50 top-0 left-0 bottom-0 right-0 bg-black bg-opacity-50 flex justify-center items-center">
 			<div className="bg-gray-500 p-5 rounded-md w-80 flex flex-col gap-8">
 
 				<div className="flex justify-between items-center">

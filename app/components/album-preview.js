@@ -157,7 +157,7 @@ const AlbumPreview = ({ album, size }) => {
                             
                             {menuIsOpen && 
                             (
-                                <div onMouseLeave={handleCloseMenu} className="absolute bottom-0 mb-2 left-1/2 ml-12  bg-gray-400 rounded-sm z-50 shadow-xl shadow-black">
+                                <div onMouseLeave={handleCloseMenu} className="absolute bottom-0 mb-2 left-1/2 ml-12  bg-gray-400 rounded-sm z-40 shadow-xl shadow-black">
                                     <div className="flex flex-col relative" >
                                         <div className="px-6 py-2">
                                             <StarRating currentRating={rating} onRatingChange={handleRatingChange} />
